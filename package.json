@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "nodemon --expose-gc --trace_gc index.js"
   },
   "author": "",
   "license": "ISC",

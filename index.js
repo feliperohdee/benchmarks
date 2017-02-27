@@ -16,13 +16,13 @@ const withRxjs = () => {
     });
 };
 
-const iterator = (fn, cb, max = 1000, i = 0) => {
+const iterator = (fn, cb, max = 10000, i = 0) => {
     if (i >= max) {
         return cb(i);
     }
 
     const done = () => {
-        iterator(fn, cb, max, i + 1);
+        process.nextTick(() => iterator(fn, cb, max, i + 1));
     }
 
     fn(done);
@@ -30,6 +30,8 @@ const iterator = (fn, cb, max = 1000, i = 0) => {
 
 const tests = [
     () => {
+        global.gc();
+
         const {
             heapUsed: startHeapUsed
         } = process.memoryUsage();
@@ -46,12 +48,14 @@ const tests = [
             } = process.memoryUsage();
 
             console.timeEnd('promise');
-            console.log('heapUsed', (finalHeapUsed - startHeapUsed) / 1024, 'Kb');
+            console.log('heapDelta', (finalHeapUsed - startHeapUsed) / 1024, 'Kb');
 
             tests[1]();
         });
     },
     () => {
+        global.gc();
+
         const {
             heapUsed: startHeapUsed
         } = process.memoryUsage();
@@ -68,7 +72,7 @@ const tests = [
             } = process.memoryUsage();
 
             console.timeEnd('rxjs');
-            console.log('heapUsed', (finalHeapUsed - startHeapUsed) / 1024, 'Kb');
+            console.log('heapDelta', (finalHeapUsed - startHeapUsed) / 1024, 'Kb');
         });
     }
 ];
