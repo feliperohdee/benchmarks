@@ -60,12 +60,12 @@ const tests = [{
 }, {
     label: 'promise with map projection',
     fn: done => withPromise()
-        .map(response => response ** 2)
+        .map(response => response * 2)
         .finally(done)
 }, {
     label: 'observable with map projection',
     fn: done => withRxjs()
-        .map(response => response ** 2)
+        .map(response => response * 2)
         .subscribe(null, null, done)
 }, {
     label: 'promise with filter',
