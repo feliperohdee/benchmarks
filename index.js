@@ -77,6 +77,20 @@ const tests = [{
     fn: done => withRxjs()
         .filter(response => response % 2)
         .subscribe(null, null, done)
+}, {
+    label: 'promise with reduction',
+    fn: done => withPromise()
+        .reduce((reduction, response) => {
+            return reduction += response;
+        }, 0)
+        .finally(done)
+}, {
+    label: 'observable with reduction',
+    fn: done => withRxjs()
+        .reduce((reduction, response) => {
+            return reduction += response;
+        }, 0)
+        .subscribe(null, null, done)
 }];
 
 const results = [];
