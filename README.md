@@ -2,20 +2,68 @@
 
 npm i && npm start
 
-## Sample 1000 iteractions
+## Sample 100000 iteractions
 
-		[21922:0x102801600]       61 ms: Scavenge 3.2 (9.0) -> 2.8 (10.0) MB, 0.9 / 0.0 ms  allocation failure # it shows garba collector actions
-		[21922:0x102801600]       73 ms: Scavenge 3.4 (10.0) -> 3.1 (11.0) MB, 0.9 / 0.0 ms  allocation failure
-		[21922:0x102801600]      109 ms: Scavenge 4.4 (11.0) -> 3.8 (13.0) MB, 0.7 / 0.0 ms  allocation failure
-		[21922:0x102801600]      151 ms: Scavenge 5.9 (13.0) -> 4.7 (14.0) MB, 1.0 / 0.0 ms  allocation failure
-		[21922:0x102801600]      187 ms: Scavenge 6.6 (14.0) -> 5.3 (14.0) MB, 1.3 / 0.0 ms  allocation failure
-		[21922:0x102801600]      228 ms: Scavenge 7.5 (14.0) -> 6.1 (15.0) MB, 1.0 / 0.0 ms  allocation failure
-		[21922:0x102801600]      266 ms: Scavenge 8.1 (16.0) -> 6.8 (20.0) MB, 1.2 / 0.0 ms  allocation failure
-		[21922:0x102801600]      344 ms: Scavenge 11.3 (21.0) -> 8.3 (21.0) MB, 1.4 / 0.0 ms  allocation failure
-		[21922:0x102801600]      366 ms: Mark-sweep 9.2 (21.0) -> 7.6 (22.0) MB, 8.8 / 0.0 ms  Isolate::RequestGarbageCollection GC in old space requested
-		promise: 26.917ms
-		heapDelta 1610.390625 Kb
-		
-		[21922:0x102801600]      409 ms: Mark-sweep 9.2 (22.0) -> 7.6 (22.0) MB, 8.7 / 0.0 ms  Isolate::RequestGarbageCollection GC in old space requested # it shows garba collector actions
-		rxjs: 10.153ms
-		heapDelta 973.640625 Kb
+		running test 0 with 100000 iteractions: promise creation
+		running test 0 with 100000 iteractions: promise creation
+		running test 0 with 100000 iteractions: promise creation
+		running test 0 with 100000 iteractions: promise creation
+		running test 0 with 100000 iteractions: promise creation
+		running test 1 with 100000 iteractions: observable creation
+		running test 1 with 100000 iteractions: observable creation
+		running test 1 with 100000 iteractions: observable creation
+		running test 1 with 100000 iteractions: observable creation
+		running test 1 with 100000 iteractions: observable creation
+		running test 2 with 100000 iteractions: promise with map projection
+		running test 2 with 100000 iteractions: promise with map projection
+		running test 2 with 100000 iteractions: promise with map projection
+		running test 2 with 100000 iteractions: promise with map projection
+		running test 2 with 100000 iteractions: promise with map projection
+		running test 3 with 100000 iteractions: observable with map projection
+		running test 3 with 100000 iteractions: observable with map projection
+		running test 3 with 100000 iteractions: observable with map projection
+		running test 3 with 100000 iteractions: observable with map projection
+		running test 3 with 100000 iteractions: observable with map projection
+		running test 4 with 100000 iteractions: promise with filter
+		running test 4 with 100000 iteractions: promise with filter
+		running test 4 with 100000 iteractions: promise with filter
+		running test 4 with 100000 iteractions: promise with filter
+		running test 4 with 100000 iteractions: promise with filter
+		running test 5 with 100000 iteractions: observable with filter
+		running test 5 with 100000 iteractions: observable with filter
+		running test 5 with 100000 iteractions: observable with filter
+		running test 5 with 100000 iteractions: observable with filter
+		running test 5 with 100000 iteractions: observable with filter
+
+		promise creation: 683.749579 ms
+		promise creation: 588.49208 ms
+		promise creation: 578.132218 ms
+		promise creation: 556.594714 ms
+		promise creation: 556.428925 ms
+		observable creation: 101.364552 ms
+		observable creation: 90.244333 ms
+		observable creation: 85.468591 ms
+		observable creation: 100.554832 ms
+		observable creation: 101.1249 ms
+
+		promise with map projection: 995.775955 ms
+		promise with map projection: 958.128087 ms
+		promise with map projection: 968.106327 ms
+		promise with map projection: 945.05489 ms
+		promise with map projection: 936.10446 ms
+		observable with map projection: 247.047491 ms
+		observable with map projection: 222.182374 ms
+		observable with map projection: 230.487226 ms
+		observable with map projection: 242.370153 ms
+		observable with map projection: 246.661335 ms
+
+		promise with filter: 1.074935709 s
+		promise with filter: 1.0896892519999999 s
+		promise with filter: 1.075606155 s
+		promise with filter: 1.072180634 s
+		promise with filter: 1.094443462 s
+		observable with filter: 235.671661 ms
+		observable with filter: 222.153577 ms
+		observable with filter: 227.40633 ms
+		observable with filter: 209.220476 ms
+		observable with filter: 243.145273 ms

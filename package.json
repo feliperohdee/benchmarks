@@ -9,8 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bench": "^0.3.6",
     "bluebird": "^3.4.7",
+    "lodash": "^4.17.4",
+    "pretty-hrtime": "^1.0.3",
     "rxjs": "^5.2.0"
   }
 }
