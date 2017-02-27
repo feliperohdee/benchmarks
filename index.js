@@ -16,7 +16,7 @@ const withRxjs = () => {
     });
 };
 
-const iterator = (fn, cb, max = 10000, i = 0) => {
+const iterator = (fn, cb, max = 1000, i = 0) => {
     if (i >= max) {
         return cb(i);
     }
