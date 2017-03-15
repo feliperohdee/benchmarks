@@ -1,133 +1,93 @@
 const _ = require('lodash');
 const hrtime = require('pretty-hrtime');
-const Promise = require('bluebird');
-const {
-    Observable
-} = require('rxjs');
 
-const withPromise = () => {
-    return new Promise((resolve, reject) => {
-        resolve([1, 2, 3, 4, 5]);
-    });
+/**
+ * Number.prototype.format(n, x, s, c)
+ * 
+ * @param integer n: length of decimal
+ * @param integer x: length of whole part
+ * @param mixed   s: sections delimiter
+ * @param mixed   c: decimal delimiter
+ */
+Number.prototype.format = function(n = 0, x = 3, s = '.', c = ',') {
+    var re = '\\d(?=(\\d{' + x + '})+' + (n > 0 ? '\\D' : '$') + ')',
+        num = this.toFixed(Math.max(0, ~~n));
+
+    return (c ? num.replace('.', c) : num).replace(new RegExp(re, 'g'), '$&' + (s || ','));
 };
 
-const withRxjs = () => {
-    return Observable.create(subscriber => {
-        subscriber.next(1);
-        subscriber.next(2);
-        subscriber.next(3);
-        subscriber.next(4);
-        subscriber.next(5);
-        subscriber.complete();
-    });
-};
-
-const iterator = (fn, cb, max = 50000, i = 0) => {
-    if (i >= max) {
-        return cb(i);
+module.exports = class Suite {
+    constructor(iteractions = 100000, runTimes = 5, chunkSize = null) {
+        this.results = [];
+        this.iteractions = iteractions;
+        this.runTimes = runTimes;
+        this.chunkSize = chunkSize || runTimes * 2;
     }
 
-    const done = () => {
-        process.nextTick(() => iterator(fn, cb, max, i + 1));
-    }
-
-    fn(done);
-}
-
-const print = (results, chunkSize = 2) =>  {
-    const chunked = _.chunk(results, chunkSize);
-
-    _.each(chunked, result => {
-        _.each(result, ({
-            label,
-            time
-        }) => {
-            console.log(`${label}: ${time}`);
-        });
-
-        console.log();
-    });
-}
-
-const tests = [{
-    label: 'promise creation',
-    fn: done => withPromise()
-        .finally(done)
-}, {
-    label: 'observable creation',
-    fn: done => withRxjs()
-        .subscribe(null, null, done)
-}, {
-    label: 'promise with map projection',
-    fn: done => withPromise()
-        .map(response => response * 2)
-        .finally(done)
-}, {
-    label: 'observable with map projection',
-    fn: done => withRxjs()
-        .map(response => response * 2)
-        .subscribe(null, null, done)
-}, {
-    label: 'promise with filter',
-    fn: done => withPromise()
-        .filter(response => response % 2)
-        .finally(done)
-}, {
-    label: 'observable with filter',
-    fn: done => withRxjs()
-        .filter(response => response % 2)
-        .subscribe(null, null, done)
-}, {
-    label: 'promise with reduction',
-    fn: done => withPromise()
-        .reduce((reduction, response) => {
-            return reduction += response;
-        }, 0)
-        .finally(done)
-}, {
-    label: 'observable with reduction',
-    fn: done => withRxjs()
-        .reduce((reduction, response) => {
-            return reduction += response;
-        }, 0)
-        .subscribe(null, null, done)
-}];
-
-const results = [];
-const iteractions = 100000;
-const runTimes = 5;
-const chunkSize = runTimes * 2;
-
-(function run(index = 0, runIndex = 1) {
-    const {
-        label,
-        fn
-    } = tests[index];
-
-    console.log(`running test ${index} with ${iteractions} iteractions: ${label}`);
-
-    const start = process.hrtime();
-
-    iterator(fn, () => {
-        const end = process.hrtime(start);
-        const time = hrtime(end, {
-            precise: true
-        });
-
-        results.push({
-            label,
-            time
-        });
-        
-        const shouldRepeat = runIndex < runTimes;
-        const nextIndex = shouldRepeat ? index : index + 1;
-        const nextRunIndex = shouldRepeat ? runIndex + 1 : 1;
-
-        if (tests[nextIndex]) {
-            run(nextIndex, nextRunIndex);
-        } else {
-            console.log();
-            print(results, chunkSize);
+    iterator(fn, cb, i = 0) {
+        if (i >= this.iteractions) {
+            return cb();
         }
-    }, iteractions);
-})();
+
+        const done = () => {
+            process.nextTick(() => this.iterator(fn, cb, i + 1));
+        }
+
+        fn(i, done);
+    }
+
+    opsSecond(iteractions, ms) {
+        const inSeconds = parseFloat(ms) / 1000;
+
+        return `${Math.floor(this.iteractions / inSeconds).format()} ops/sec`;
+    }
+
+    print() {
+        const chunked = _.chunk(this.results, this.chunkSize);
+
+        _.each(chunked, result => {
+            _.each(result, ({
+                label,
+                time
+            }) => {
+                console.log(`${label}: ${time} ${this.opsSecond(this.iteractions, time)}`);
+            });
+
+            console.log();
+        });
+    }
+
+    run(tests, index = 0, runIndex = 1) {
+        const {
+            label,
+            fn
+        } = tests[index];
+
+        console.log(`running test ${index} with ${this.iteractions.format()} iteractions: ${label}`);
+
+        const start = process.hrtime();
+
+        this.iterator(fn, () => {
+            const end = process.hrtime(start);
+            const time = hrtime(end, {
+                precise: true
+            });
+
+            this.results.push({
+                label,
+                time
+            });
+
+            const shouldRepeat = runIndex < this.runTimes;
+            const nextIndex = shouldRepeat ? index : index + 1;
+            const nextRunIndex = shouldRepeat ? runIndex + 1 : 1;
+
+            if (tests[nextIndex]) {
+                this.run(tests, nextIndex, nextRunIndex);
+            } else {
+                console.log();
+                this.print();
+            }
+        });
+    }
+}
