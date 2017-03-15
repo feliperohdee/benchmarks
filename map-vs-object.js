@@ -31,14 +31,14 @@ suite.run([{
 }, {
     label: 'object get',
     fn: (i, done) => {
-        bigObject[`key-${iteractions / 2}`];
+        bigObject[`key-${i}`];
 
         done();
     }
 }, {
     label: 'map get',
     fn: (i, done) => {
-        map.get(`key-${iteractions / 2}`);
+        map.get(`key-${i}`);
 
         done();
     }
